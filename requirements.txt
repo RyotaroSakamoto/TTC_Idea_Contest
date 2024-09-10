@@ -1,0 +1,5 @@
+discord.py
+chardet
+pymupdf # fitz モジュールは PyMuPDF ライブラリから提供されます
+nest-asyncio
+openai
