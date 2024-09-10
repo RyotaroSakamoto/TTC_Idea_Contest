@@ -2,7 +2,7 @@
 
 ## 前置き
 
-このプロジェクトはTTC_Idea_Contestにて制作されているものです。現在制作途中であり、大規模な変更がある可能性があります。
+このプロジェクトはTTC_Idea_Contestにて制作された現在制作途中であり、大規模な変更がある可能性があります。
 
 ## 概要
 
@@ -59,14 +59,16 @@
    ```
 3. 環境変数を設定します。
 
-   ```
+   ```Bash
+
+   #Linux,Mac
    export OPENAI_API_KEY=<your_openai_api_key>
    export Discord_Bot_Key=<your_discord_bot_key>
    ```
 4. Botを実行します。
 
    ```
-   python bot.py
+   python main.py
    ```
 
 ## コマンド一覧
@@ -78,7 +80,7 @@
 - `-j <テキスト>`: 日本語に翻訳。
 - `-e <テキスト>`: 英語に翻訳。
 - `-ch <テキスト>`: 中国語に翻訳。
-- `/csv_analysis <CSVファイル>`: アップロードしたCSVに対してEDAを実行。
+- `/csv_analysis <CSVファイル>`: アップロードしたCSVに対してEDA(簡易な探索的データ分析)を実行。
 - `/img2f <画像>`: 画像内のテキストにふりがなを追加。
 
 
