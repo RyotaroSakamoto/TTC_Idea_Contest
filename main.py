@@ -1,5 +1,6 @@
 #ライブラリの読み込みと設定
 import os
+import io
 from io import StringIO
 
 import chardet
