@@ -68,32 +68,32 @@ def img_add_furigana(url):
     return completion.choices[0].message.content
 
 
-#探索的データ分析を実行する関数
-def run_eda_analysis(csv_io):
-    prompt = f"""
-                        以下のCSVデータに対して探索的データ分析（EDA）を実行してください。データの確認、各統計量の確認、データに対する推察を段階的に実施してください。
-                        出力の条件:
-                        分析に使用したpythonコードを、ローカル環境で実行できるようにコードブロックで生成してください
-                        分析コードを実行し、実行結果をmarkdownとして整形してから出力して下さい
-                        {csv_io}
-                        """
-    completion = openai_client.chat.completions.create(
-        model="gpt-4o",
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a perfect data analyst."
-            },
-            {
-                "role": "user",
-                "content": [{
-                    "type": "text",
-                    "text": f"{prompt}"
-                }]
-            },
-        ])
+# #探索的データ分析を実行する関数
+# def run_eda_analysis(csv_io):
+#     prompt = f"""
+#                         以下のCSVデータに対して探索的データ分析（EDA）を実行してください。データの確認、各統計量の確認、データに対する推察を段階的に実施してください。
+#                         出力の条件:
+#                         分析に使用したpythonコードを、ローカル環境で実行できるようにコードブロックで生成してください
+#                         分析コードを実行し、実行結果をmarkdownとして整形してから出力して下さい
+#                         {csv_io}
+#                         """
+#     completion = openai_client.chat.completions.create(
+#         model="gpt-4o",
+#         messages=[
+#             {
+#                 "role": "system",
+#                 "content": "You are a perfect data analyst."
+#             },
+#             {
+#                 "role": "user",
+#                 "content": [{
+#                     "type": "text",
+#                     "text": f"{prompt}"
+#                 }]
+#             },
+#         ])
 
-    return completion.choices[0].message.content
+#     return completion.choices[0].message.content
 
 
 # PDFファイルをテキストに変換する関数
@@ -359,41 +359,41 @@ def main():
 
         await interaction.followup.send("", embed=embed)
 
-    #csvファイルの探索的データ分析
-    @tree.command(name="csv_analysis",
-                  description="csvファイルのデータから探索的データ分析を実行します。")
-    async def csv_analysis(interaction: discord.Integration,
-                           csv_file: discord.Attachment):
-        await interaction.response.defer()
+    # #csvファイルの探索的データ分析
+    # @tree.command(name="csv_analysis",
+    #               description="csvファイルのデータから探索的データ分析を実行します。")
+    # async def csv_analysis(interaction: discord.Integration,
+    #                        csv_file: discord.Attachment):
+    #     await interaction.response.defer()
 
-        if csv_file.filename.endswith(".csv"):
-            file_data = await csv_file.read()
-            result = chardet.detect(file_data)
-            encoding = result["encoding"]
-            print(f"csv_files encoding is {encoding}")
+    #     if csv_file.filename.endswith(".csv"):
+    #         file_data = await csv_file.read()
+    #         result = chardet.detect(file_data)
+    #         encoding = result["encoding"]
+    #         print(f"csv_files encoding is {encoding}")
 
-            try:
-                file_content = file_data.decode(encoding=encoding)
-                print(f"csv_file: \n{file_content}")
-                analysis_result = run_eda_analysis(file_content)
+    #         try:
+    #             file_content = file_data.decode(encoding=encoding)
+    #             print(f"csv_file: \n{file_content}")
+    #             analysis_result = run_eda_analysis(file_content)
 
-                if len(analysis_result) < 2000:
-                    await interaction.followup.send(analysis_result,
-                                                    split=True)
-                else:
-                    # analysis_result をテキストファイルとして保存し、ファイルとして送信
-                    with StringIO() as text_file:
-                        text_file.write(analysis_result)
-                        text_file.seek(0)  # ファイルポインタを先頭に移動
-                        await interaction.followup.send(file=discord.File(
-                            text_file, filename="analysis_result.md"))
+    #             if len(analysis_result) < 2000:
+    #                 await interaction.followup.send(analysis_result,
+    #                                                 split=True)
+    #             else:
+    #                 # analysis_result をテキストファイルとして保存し、ファイルとして送信
+    #                 with StringIO() as text_file:
+    #                     text_file.write(analysis_result)
+    #                     text_file.seek(0)  # ファイルポインタを先頭に移動
+    #                     await interaction.followup.send(file=discord.File(
+    #                         text_file, filename="analysis_result.md"))
 
-            except Exception as e:
-                print(f"error: {e}")
-                await interaction.followup.delete_message()
+    #         except Exception as e:
+    #             print(f"error: {e}")
+    #             await interaction.followup.delete_message()
 
-        else:
-            await interaction.followup.send(f"error: {csv_file.filename=}")
+    #     else:
+    #         await interaction.followup.send(f"error: {csv_file.filename=}")
 
     client.run(DISCORD_TOKEN)
 
