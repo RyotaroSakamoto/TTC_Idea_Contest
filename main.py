@@ -417,7 +417,7 @@ def main():
     @tree.command(name="img2h", description="添付された画像から文字を読み取り、ひらがなにして返信します。")
     async def img2h(interaction: discord.Interaction, img: discord.Attachment):
         await interaction.response.defer()
-        message = img_add_furigana(img.url)
+        message = img_to_hiragana(img.url)
         print(img.url)
         print(type(img.url))
         embed = discord.Embed(
