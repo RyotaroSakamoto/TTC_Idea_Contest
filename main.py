@@ -69,6 +69,33 @@ def img_add_furigana(url):
     return completion.choices[0].message.content
 
 
+def img_to_hiragana(url):
+    completion = openai_client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {
+                "role":
+                "system",
+                "content":
+                "You are a teacher that gives simple useful answers to students."
+            },
+            {
+                "role":
+                "user",
+                "content": [{
+                    "type":
+                    "text",
+                    "text":
+                    "画像を日本語に文字起こしし、すべてひらがなにして出力してください。\n#例 \n入力(画像): ご飯を食べる \n出力: ごはんをたべる"
+                }, {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": str(url),
+                    }
+                }]
+            },
+        ])
+
 # #探索的データ分析を実行する関数
 # def run_eda_analysis(csv_io):
 #     prompt = f"""
@@ -147,6 +174,23 @@ def add_furigana(question):
             "content": question
         }])
     return completion.choices[0].message.content
+
+
+# 漢字をひらがなにする関数
+def to_hiragana(question):
+    completion = openai_client.chat.completions.create(
+        model="gpt-4o",
+        messages=[{
+            "role":
+            "system",
+            "content":
+            "日本語の文章が与えられたら、ひらがなにして出力してください　例:ご飯を食べたい→ごはんをたべたい」"
+        }, {
+            "role": "user",
+            "content": question
+        }])
+    return completion.choices[0].message.content
+
 
 
 # 国ごとの文化を説明する関数
@@ -343,6 +387,13 @@ def main():
         #channelに結果を送信する
         await interaction.response.send_message(message_to_sent)
 
+    @tree.command(name="jp2hiragana", description="引数にひらがなに変換したい文章を入力してください")
+    async def gpt(interaction: discord.Interaction, prompt: str):
+        #プロンプトをgpt-4oに渡して出力を得る
+        message_to_sent = to_hiragana(prompt)
+        #channelに結果を送信する
+        await interaction.response.send_message(message_to_sent)
+
     @tree.command(name="img2f", description="添付された画像から文字を読み取り、ふりがなを付けて返信します。")
     async def img2f(interaction: discord.Interaction, img: discord.Attachment):
         await interaction.response.defer()
@@ -360,6 +411,23 @@ def main():
 
         await interaction.followup.send("", embed=embed)
 
+
+    @tree.command(name="img2h", description="添付された画像から文字を読み取り、ひらがなにして返信します。")
+    async def img2f(interaction: discord.Interaction, img: discord.Attachment):
+        await interaction.response.defer()
+        message = img_to_hiragana(img.url)
+        # url = "https://cdn.discordapp.com/ephemeral-attachments/1282936421732323402/1282950560290570290/wdawdawadad.png?ex=66e13851&is=66dfe6d1&hm=5f4e5b5add506f1cdfb000797b23c175ef86451c4ac9d681af8f86dd0520b535&"
+        print(img.url)
+        print(type(img.url))
+        embed = discord.Embed(
+            title=f"{message}",
+            color=0x00ff00,
+            description=f"",
+            url=img.url,
+        )
+        embed.set_image(url=img.url)  # 大きな画像タイルを設定できる
+
+        await interaction.followup.send("", embed=embed)
     # #csvファイルの探索的データ分析
     # @tree.command(name="csv_analysis",
     #               description="csvファイルのデータから探索的データ分析を実行します。")
