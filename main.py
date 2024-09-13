@@ -96,6 +96,8 @@ def img_to_hiragana(url):
             },
         ])
 
+    return completion.choices[0].message.content
+
 # #探索的データ分析を実行する関数
 # def run_eda_analysis(csv_io):
 #     prompt = f"""
