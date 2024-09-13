@@ -413,7 +413,7 @@ def main():
 
 
     @tree.command(name="img2h", description="添付された画像から文字を読み取り、ひらがなにして返信します。")
-    async def img2f(interaction: discord.Interaction, img: discord.Attachment):
+    async def img2h(interaction: discord.Interaction, img: discord.Attachment):
         await interaction.response.defer()
         message = img_to_hiragana(img.url)
         # url = "https://cdn.discordapp.com/ephemeral-attachments/1282936421732323402/1282950560290570290/wdawdawadad.png?ex=66e13851&is=66dfe6d1&hm=5f4e5b5add506f1cdfb000797b23c175ef86451c4ac9d681af8f86dd0520b535&"
@@ -428,6 +428,9 @@ def main():
         embed.set_image(url=img.url)  # 大きな画像タイルを設定できる
 
         await interaction.followup.send("", embed=embed)
+    
+
+
     # #csvファイルの探索的データ分析
     # @tree.command(name="csv_analysis",
     #               description="csvファイルのデータから探索的データ分析を実行します。")
